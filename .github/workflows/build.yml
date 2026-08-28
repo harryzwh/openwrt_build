@@ -26,6 +26,7 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
+          sudo apt update
           sudo apt install -y --no-install-recommends \
               make gcc g++ gcc-aarch64-linux-gnu \
               libncurses-dev zlib1g-dev libssl-dev \
@@ -53,6 +54,6 @@ jobs:
       - name: Checkout config file
         uses: actions/checkout@main
       
-      - name: test
+      - name: Copy config to soutce
         run: |
-          ls -l .
+          ls ${GITHUB_WORKSPACE}
