@@ -6,8 +6,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: /workdir
 
     steps:
+      - name: Create workdir
+        run: |
+          sudo mkdir -p /workdir
+          sudo chown $USER:$GROUPS /workdir
+
       - name: Checkout config file
         uses: actions/checkout@main
       
@@ -28,11 +36,11 @@ jobs:
       
       - name: Clone source
         run: |
-          git clone -b v25.12.1 --depth 1 https://github.com/immortalwrt/immortalwrt /openwrt
+          git clone -b v25.12.1 --depth 1 https://github.com/immortalwrt/immortalwrt /workdir/openwrt
       
       - name: Install feeds
         run: |
-          cd /openwrt && ./scripts/feeds update -a && ./scripts/feeds install -a
+          cd /workdir/openwrt && ./scripts/feeds update -a && ./scripts/feeds install -a
       
       - name: Patch source
         run: |
