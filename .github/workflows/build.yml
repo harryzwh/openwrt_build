@@ -16,9 +16,6 @@ jobs:
         run: |
           sudo mkdir -p /workdir
           sudo chown $USER:$GROUPS /workdir
-
-      - name: Checkout config file
-        uses: actions/checkout@main
       
       - name: Cleanup disk
         uses: eclipse-score/more-disk-space@v1.1
@@ -41,11 +38,21 @@ jobs:
       
       - name: Install feeds
         run: |
-          cd /workdir/openwrt && ./scripts/feeds update -a && ./scripts/feeds install -a
+          cd /workdir/openwrt 
+          ./scripts/feeds update -a 
+          ./scripts/feeds install -a
       
       - name: Patch source
         run: |
+          cd /workdir/openwrt 
           cp ./target/linux/mediatek/dts/mt7981b-cmcc-rax3000m-nand.dtso ./target/linux/mediatek/dts/mt7981b-cmcc-rax3000m-nand-256m.dtso
           sed -i 's/reg = <0x580000 0x7200000>;/reg = <0x580000 0xEE00000>;/' ./target/linux/mediatek/dts/mt7981b-cmcc-rax3000m-nand-256m.dtso
           sed -i '/DEVICE_DTS_OVERLAY := mt7981b-cmcc-rax3000m-emmc mt7981b-cmcc-rax3000m-nand/s/$/ mt7981b-cmcc-rax3000m-nand-256m/' ./target/linux/mediatek/image/filogic.mk
           sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' ./feeds/packages/lang/rust/Makefile
+      
+      - name: Checkout config file
+        uses: actions/checkout@main
+      
+      - name: test
+        run: |
+          ls -l .
