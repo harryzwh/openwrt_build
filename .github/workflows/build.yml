@@ -1,0 +1,27 @@
+name: OpenWrt Builder
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout config file
+        uses: actions/checkout@main
+      
+      - name: Cleanup disk
+        uses: eclipse-score/more-disk-space@v1.1
+        with:
+          level: 4
+      
+      - name: Setup build environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo apt install -y --no-install-recommends \
+              make gcc g++ gcc-aarch64-linux-gnu \
+              libncurses-dev zlib1g-dev libssl-dev \
+              unzip bzip2 swig bison flex \
+              python3-distutils python3-setuptools
