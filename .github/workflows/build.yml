@@ -56,4 +56,12 @@ jobs:
       
       - name: Copy config to soutce
         run: |
-          ls ${GITHUB_WORKSPACE}
+          cd /workdir/openwrt 
+          cp ${GITHUB_WORKSPACE}/config_RAC3000M .config
+      
+      - name: Build image
+        run: |
+          cd /workdir/openwrt 
+          make defconfig
+          make download -j8
+          make -j4 || make -j2 || make -j1 V=s
