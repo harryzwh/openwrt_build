@@ -6,6 +6,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: /workdir
 
     steps:
       - name: Checkout config file
@@ -25,3 +28,18 @@ jobs:
               libncurses-dev zlib1g-dev libssl-dev \
               unzip bzip2 swig bison flex \
               python3-distutils python3-setuptools
+      
+      - name: Clone source
+        run: |
+          git clone -b v25.12.1 --depth 1 https://github.com/immortalwrt/immortalwrt /workdir/openwrt
+      
+      - name: Install feeds
+        run: |
+          cd /workdir/openwrt && ./scripts/feeds update -a && ./scripts/feeds install -a
+      
+      - name: Patch source
+        run: |
+          cp ./target/linux/mediatek/dts/mt7981b-cmcc-rax3000m-nand.dtso ./target/linux/mediatek/dts/mt7981b-cmcc-rax3000m-nand-256m.dtso
+          sed -i 's/reg = <0x580000 0x7200000>;/reg = <0x580000 0xEE00000>;/' ./target/linux/mediatek/dts/mt7981b-cmcc-rax3000m-nand-256m.dtso
+          sed -i '/DEVICE_DTS_OVERLAY := mt7981b-cmcc-rax3000m-emmc mt7981b-cmcc-rax3000m-nand/s/$/ mt7981b-cmcc-rax3000m-nand-256m/' ./target/linux/mediatek/image/filogic.mk
+          sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' ./feeds/packages/lang/rust/Makefile
