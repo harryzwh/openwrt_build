@@ -12,6 +12,7 @@ jobs:
 
     steps:
       - name: Create workdir
+        working-directory: /
         run: |
           sudo mkdir -p /workdir
           sudo chown $USER:$GROUPS /workdir
