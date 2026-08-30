@@ -62,7 +62,7 @@ jobs:
       - name: Checkout config file
         uses: actions/checkout@main
       
-      - name: Copy config to soutce
+      - name: Copy config to source
         run: |
           cd /workdir/openwrt 
           cp ${GITHUB_WORKSPACE}/config_RAC3000M .config
@@ -81,7 +81,7 @@ jobs:
           cd /workdir/openwrt 
           tar -zcvf upload.tar.gz --exclude=packages .config
           echo "TAG_NAME=OpenWrt_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-          echo "UPLOAD_FILE=$PWD/upload.tar.gz"
+          echo "UPLOAD_FILE=$PWD/upload.tar.gz" >> $GITHUB_ENV
       
       - name: Upload firmware to release
         uses: softprops/action-gh-release@v3
