@@ -22,6 +22,14 @@ jobs:
         with:
           level: 4
       
+      - name: Cache dl directory
+        uses: actions/cache@v4
+        with:
+          path: openwrt/dl
+          key: ${{ runner.os }}-openwrt-dl-${{ hashFiles('openwrt/.config') }}
+          restore-keys: |
+            ${{ runner.os }}-openwrt-dl-
+      
       - name: Setup build environment
         env:
           DEBIAN_FRONTEND: noninteractive
@@ -59,9 +67,25 @@ jobs:
           cd /workdir/openwrt 
           cp ${GITHUB_WORKSPACE}/config_RAC3000M .config
       
-      - name: Build image
+      # - name: Build image
+      #   run: |
+      #     cd /workdir/openwrt 
+      #     make defconfig
+      #     make download -j8
+      #     make -j4 || make -j2 || make -j1 V=s
+      #     echo "BUILD_STATUS=success" >> $GITHUB_ENV
+      
+      - name: Prepare upload file
+        # if: env.BUILD_STATUS == 'success' && !cancelled()
         run: |
           cd /workdir/openwrt 
-          make defconfig
-          make download -j8
-          make -j4 || make -j2 || make -j1 V=s
+          tar -zcvf upload.tar.gz --exclude=packages .config
+          echo "TAG_NAME=OpenWrt_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+          echo "UPLOAD_FILE=$PWD/upload.tar.gz"
+      
+      - name: Upload firmware to release
+        uses: softprops/action-gh-release@v3
+        # if: env.BUILD_STATUS == 'success' && !cancelled()
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          files: ${{ env.UPLOAD_FILE }}
