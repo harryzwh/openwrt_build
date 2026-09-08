@@ -54,9 +54,9 @@ jobs:
       - name: Patch source
         run: |
           cd /workdir/openwrt 
-          cp ./target/linux/mediatek/dts/mt7981b-cmcc-rax3000m-nand.dtso ./target/linux/mediatek/dts/mt7981b-cmcc-rax3000m-nand-256m.dtso
-          sed -i 's/reg = <0x580000 0x7200000>;/reg = <0x580000 0xEA80000>;/' ./target/linux/mediatek/dts/mt7981b-cmcc-rax3000m-nand-256m.dtso
-          sed -i '/DEVICE_DTS_OVERLAY := mt7981b-cmcc-rax3000m-emmc mt7981b-cmcc-rax3000m-nand/s/$/ mt7981b-cmcc-rax3000m-nand-256m/' ./target/linux/mediatek/image/filogic.mk
+          # cp ./target/linux/mediatek/dts/mt7981b-cmcc-rax3000m-nand.dtso ./target/linux/mediatek/dts/mt7981b-cmcc-rax3000m-nand-256m.dtso
+          # sed -i 's/reg = <0x580000 0x7200000>;/reg = <0x580000 0xEA80000>;/' ./target/linux/mediatek/dts/mt7981b-cmcc-rax3000m-nand-256m.dtso
+          # sed -i '/DEVICE_DTS_OVERLAY := mt7981b-cmcc-rax3000m-emmc mt7981b-cmcc-rax3000m-nand/s/$/ mt7981b-cmcc-rax3000m-nand-256m/' ./target/linux/mediatek/image/filogic.mk
           sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' ./feeds/packages/lang/rust/Makefile
       
       - name: Checkout config file
@@ -65,7 +65,7 @@ jobs:
       - name: Copy config to source
         run: |
           cd /workdir/openwrt 
-          cp ${GITHUB_WORKSPACE}/config_RAC3000M .config
+          cp ${GITHUB_WORKSPACE}/config_RAC3000M_128m .config
       
       - name: Build image
         run: |
