@@ -48,7 +48,7 @@ jobs:
       - name: Install feeds
         run: |
           cd /workdir/openwrt 
-          echo "src-git helloworld https://github.com/fw876/helloworld.git" >> ./feeds.conf.default
+          # echo "src-git helloworld https://github.com/fw876/helloworld.git" >> ./feeds.conf.default
           ./scripts/feeds update -a 
           ./scripts/feeds install -a
       
@@ -68,7 +68,7 @@ jobs:
       - name: Copy config to source
         run: |
           cd /workdir/openwrt 
-          cp ${GITHUB_WORKSPACE}/config_RAX3000M_no_passwall .config
+          cp ${GITHUB_WORKSPACE}/config_RAX3000M_homeproxy .config
       
       - name: Build image
         run: |
