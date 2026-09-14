@@ -48,6 +48,7 @@ jobs:
       - name: Install feeds
         run: |
           cd /workdir/openwrt 
+          echo "src-git helloworld https://github.com/fw876/helloworld.git" >> ./feeds.conf.default
           ./scripts/feeds update -a 
           ./scripts/feeds install -a
       
