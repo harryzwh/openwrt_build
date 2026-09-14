@@ -68,7 +68,7 @@ jobs:
       - name: Copy config to source
         run: |
           cd /workdir/openwrt 
-          cp ${GITHUB_WORKSPACE}/config_RAX3000M_ssr .config
+          cp ${GITHUB_WORKSPACE}/config_RAX3000M_no_passwall .config
       
       - name: Build image
         run: |
